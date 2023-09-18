@@ -1,16 +1,27 @@
 import random
 
 class Bot:
-    def __init__(self, tic_tac_toe):
+    def __init__(self):
+        self.choose_symbol("Choose your symbol: ")
+
+    def choose_symbol(self, message):
+        symbol = input(message)
+        if symbol != 'X' and symbol != 'O':
+            self.choose_symbol("Incorrect symbol, try again: ")
+        else:
+            self.player_symbol = symbol
+            self.bot_symbol = 'O' if symbol == 'X' else 'X'
+
+    def set_game(self, tic_tac_toe):
         self.tic_tac_toe = tic_tac_toe
         self.n = self.tic_tac_toe.size
         self.field = self.tic_tac_toe.field
 
     def is_terminal_node(self, board):
         winner = self.tic_tac_toe.end_of_game(board)
-        if winner == self.tic_tac_toe.terminal.bot_symbol:
+        if winner == self.bot_symbol:
             return (True, 1)
-        elif winner == self.tic_tac_toe.terminal.player_symbol:
+        elif winner == self.player_symbol:
             return (True, -1)
         elif winner == 'Draw':
             return (True, 0)
@@ -20,9 +31,9 @@ class Bot:
     def get_current_field(self, my_turns, enemy_turns):
         arr = [['*' for j in range(self.tic_tac_toe.size)] for i in range(self.tic_tac_toe.size)]
         for turn in my_turns:
-            arr[turn[0]][turn[1]] = self.tic_tac_toe.terminal.bot_symbol
+            arr[turn[0]][turn[1]] = self.bot_symbol
         for turn in enemy_turns:
-            arr[turn[0]][turn[1]] = self.tic_tac_toe.terminal.player_symbol
+            arr[turn[0]][turn[1]] = self.player_symbol
         return arr
 
     @staticmethod
@@ -63,14 +74,14 @@ class Bot:
         k = 0
         for i in range(len(board)):
             for j in range(len(board[i])):
-                if board[i][j] == self.tic_tac_toe.terminal.bot_symbol:
+                if board[i][j] == self.bot_symbol:
                     k += 1
         return k
 
     def check_if_lose(self, board):
         for cell in self.get_free_cells(board):
             if board[cell[0]][cell[1]] == '*':
-                board[cell[0]][cell[1]] = self.tic_tac_toe.terminal.player_symbol
+                board[cell[0]][cell[1]] = self.player_symbol
                 if self.is_terminal_node(board)[1] == -1:
                     board[cell[0]][cell[1]] = '*'
                     return cell
@@ -80,7 +91,7 @@ class Bot:
     def check_if_win(self, board):
         for cell in self.get_free_cells(board):
             if board[cell[0]][cell[1]] == '*':
-                board[cell[0]][cell[1]] = self.tic_tac_toe.terminal.bot_symbol
+                board[cell[0]][cell[1]] = self.bot_symbol
                 if self.is_terminal_node(board)[1] == 1:
                     board[cell[0]][cell[1]] = '*'
                     return cell

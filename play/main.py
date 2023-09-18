@@ -3,14 +3,14 @@ from game.Game import Game
 from gui.Gui import Gui
 from terminal.Terminal import Terminal
 
-N = 2
-
+N = 4
+()
 def play_game():
     terminal = Terminal()
     game = Game(N, terminal)
 
-    bot = Bot(game)
-
+    bot = Bot()
+    bot.set_game(game)
     terminal.set_bot(bot)
     terminal.set_field(game.field)
     game.set_bot(bot)
@@ -19,12 +19,13 @@ def play_game():
 def gu():
     terminal = Terminal()
     game = Game(N, terminal)
-    bot = Bot(game)
+    bot = Bot()
+    bot.set_game(game)
     game.set_bot(bot)
     directory = r'C:\\Users\\Gleb1\\Downloads\\'
     gui = Gui(N, 500, 500, directory + 'crest1.png', directory + 'zero1.png', bot)
     gui.draw()
 
-play_game()
-
+#play_game()
+gu()
 

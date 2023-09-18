@@ -4,10 +4,11 @@ class Terminal:
     def set_field(self, field):
         self.field = field
         self.size = len(self.field)
-        self.choose_symbol()
 
     def set_bot(self, bot):
         self.bot = bot
+        self.bot_symbol = bot.bot_symbol
+        self.player_symbol = bot.player_symbol
 
     def make_bot_move(self, player_turns, bot_turns):
         i, j = self.bot.turn(bot_turns, player_turns)
@@ -27,9 +28,14 @@ class Terminal:
         self.field[x - 1][y - 1] = self.player_symbol
         return (x-1, y-1)
 
-    def choose_symbol(self):
-        symbol = input("Choose your symbol: ")
-        while symbol != 'X' and symbol != 'O':
-            symbol = input("Incorrect symbol, try again: ")
-        self.player_symbol = symbol
-        self.bot_symbol = 'O' if symbol == 'X' else 'X'
+    def print_horizontal(self):
+        for i in range(2*self.size):
+            print('-', end='')
+
+    def print_arr(self):
+        for i in range(self.size):
+            #self.print_horizontal()
+            for j in range(self.size):
+                print(self.field[i][j], ' ', end='')
+            print('\n')
+        #self.print_horizontal()

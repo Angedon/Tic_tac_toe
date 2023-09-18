@@ -1,5 +1,6 @@
 import pygame as py
 from pygame.locals import *
+import time
 
 class Gui:
    def __init__(self, size, width, height, crest, zero, bot):
@@ -22,6 +23,8 @@ class Gui:
 
       self.screen = py.display.set_mode((width, height))
       self.screen.fill((255, 255, 255))
+      self.bot_symbol = self.bot.bot_symbol
+      self.player_symbol = self.bot.player_symbol
       py.display.set_caption("Tic tac toe")
 
    def draw_lines(self):
@@ -66,30 +69,43 @@ class Gui:
       return (self.padding + pair[0] * self.x_pad, self.padding + pair[1] * self.y_pad)
 
    def set_winner(self):
-      winner = self.bot.tic_tac_toe.end_of_game(self.bot.tic_tac_toe.field)
-      if winner == 'X':
+      winner = self.bot.tic_tac_toe.end_of_game(self.field)
+      if winner == self.bot_symbol:
          py.display.set_caption("Bot wins!")
-         return 'X'
-      elif winner == 'O':
+         return self.bot_symbol
+      elif winner == self.player_symbol:
          py.display.set_caption("Human wins!")
-         return 'O'
+         return self.player_symbol
       elif winner == 'Draw':
          py.display.set_caption("No one wins!")
          return 'D'
       else:
          return None
 
+   def check_end(self):
+      symbol = self.set_winner()
+      if symbol != None:
+         self.draw_lines()
+         self.draw_symbols()
+         py.display.flip()
+         time.sleep(5)
+      return symbol
+
    def draw(self):
       flag = True
       player_turns, bot_turns = [], []
-      while True:
+      end = None
+      while end == None:
          self.draw_lines()
          self.draw_symbols()
          py.display.flip()
 
          if flag == True:
             flag = False
-            bot_turns.append(self.add(self.get_coords(self.bot.make_bot_move(player_turns, bot_turns)), 'X'))
+            bot_turns.append(self.add(self.get_coords(self.bot.make_bot_move(player_turns, bot_turns)), self.bot_symbol))
+            end = self.check_end()
+            if end != None:
+               break
 
          for event in py.event.get():
                if event.type == QUIT:
@@ -97,7 +113,9 @@ class Gui:
                   return
                elif event.type == MOUSEBUTTONDOWN:
                   flag = True
-                  player_turns.append(self.add(py.mouse.get_pos(), 'O'))
-         symbol = self.set_winner()
+                  player_turns.append(self.add(py.mouse.get_pos(), self.player_symbol))
+         end = self.check_end()
+         if end != None:
+            break
          #if symbol == 'X' or symbol == 'O' or symbol == 'D':
             #break

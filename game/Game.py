@@ -3,16 +3,13 @@ class Game:
         self.size = size
         self.terminal = terminal
         self.field = [['*' for j in range(self.size)] for i in range(self.size)]
+        self.terminal.set_field(self.field)
         #self.terminal.choose_symbol()
 
     def set_bot(self, bot):
         self.bot = bot
-
-    def print_arr(self):
-        for i in range(self.size):
-            for j in range(self.size):
-                print(self.field[i][j], ' ', end='')
-            print('\n')
+        self.bot_symbol = self.bot.bot_symbol
+        self.player_symbol = self.bot.player_symbol
 
     def get_count_of_free(self):
         k = 0
@@ -60,9 +57,9 @@ class Game:
     # везде стоит как миниму один O и один X. Тогда вернуть True, иначе вернуть False.
 
     def print_result(self):
-        if self.winner == self.terminal.player_symbol:
+        if self.winner == self.player_symbol:
             print("Human win!")
-        elif self.winner == self.terminal.bot_symbol:
+        elif self.winner == self.bot_symbol:
             print("Bot win!")
         else:
             print("No one win!")
@@ -73,7 +70,7 @@ class Game:
         self.winner = self.end_of_game(self.field)
         while counter != self.size ** 2 and self.winner == None:
             bot_turns.append(self.terminal.make_bot_move(player_turns, bot_turns))
-            self.print_arr()
+            self.terminal.print_arr()
             self.winner = self.end_of_game(self.field)
             if self.winner != None:
                 break
